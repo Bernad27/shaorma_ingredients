@@ -1,11 +1,215 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <title>Shaorma összetevők</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Meniu & Ingrediente</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+    color:#222;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    color:#d35400;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    margin-bottom:15px;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+details summary{
+    cursor:pointer;
+    list-style:none;
+    padding:18px;
+    font-size:20px;
+    font-weight:bold;
+    background:#ff8c42;
+    color:white;
+}
+
+details summary::-webkit-details-marker{
+    display:none;
+}
+
+.content{
+    padding:18px;
+}
+
+.content ul{
+    padding-left:20px;
+}
+
+.content li{
+    margin:8px 0;
+}
+
+.allergens{
+    margin-top:35px;
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.badges{
+    margin-top:15px;
+}
+
+.badge{
+    display:inline-block;
+    background:#d35400;
+    color:white;
+    padding:8px 14px;
+    border-radius:30px;
+    margin:6px;
+    font-size:14px;
+}
+
+footer{
+    text-align:center;
+    margin-top:35px;
+    color:#777;
+    font-size:14px;
+}
+</style>
+
 </head>
 <body>
-    <h1>Shaorma összetevők</h1>
-    <p>Ide jön majd a tartalom.</p>
+
+<div class="container">
+
+<h1>🍽 Menü és összetevők</h1>
+
+<div class="card">
+<details>
+<summary>KEBAB 800 gr</summary>
+
+<div class="content">
+
+<ul>
+<li><b>Pâine (Kenyér)</b> — 300 gr</li>
+<li><b>Carne (Hús)</b> — 180 gr</li>
+<li><b>Sosuri (Mártások)</b> — 100 gr</li>
+<li><b>Legume (Zöldségek)</b> — 140 gr</li>
+<li><b>Cartofi prăjiți (Sült krumpli)</b> — 80 gr</li>
+</ul>
+
+</div>
+</details>
+</div>
+
+<div class="card">
+<details>
+<summary>DÖNER BOX 400 gr</summary>
+
+<div class="content">
+
+<ul>
+<li><b>Cartofi prăjiți</b> — 80 gr</li>
+<li><b>Carne</b> — 120 gr</li>
+<li><b>Sosuri</b> — 100 gr</li>
+<li><b>Legume</b> — 100 gr</li>
+</ul>
+
+</div>
+</details>
+</div>
+
+<div class="card">
+<details>
+<summary>SHAORMA 500 gr</summary>
+
+<div class="content">
+
+<ul>
+<li><b>Lipie</b> — 75 gr</li>
+<li><b>Carne</b> — 180 gr</li>
+<li><b>Cartofi prăjiți</b> — 100 gr</li>
+<li><b>Sosuri</b> — 60 gr</li>
+<li><b>Legume</b> — 85 gr</li>
+</ul>
+
+</div>
+</details>
+</div>
+
+<div class="card">
+<details>
+<summary>DÖNER TÁL 600 gr</summary>
+
+<div class="content">
+
+<ul>
+<li><b>Carne</b> — 200 gr</li>
+<li><b>Cartofi prăjiți</b> — 160 gr</li>
+<li><b>Sosuri</b> — 100 gr</li>
+<li><b>Salata</b> — 140 gr</li>
+</ul>
+
+</div>
+</details>
+</div>
+
+<div class="card">
+<details>
+<summary>CARTOFI PRĂJIȚI 170 gr</summary>
+
+<div class="content">
+
+<ul>
+<li><b>Összsúly</b> — 170 gr</li>
+</ul>
+
+</div>
+</details>
+</div>
+
+<div class="allergens">
+
+<h2>⚠ Allergének</h2>
+
+<div class="badges">
+<span class="badge">🥛 Lactoza</span>
+<span class="badge">🌾 Gluten</span>
+<span class="badge">🫘 Soia</span>
+<span class="badge">🥬 Telina</span>
+<span class="badge">🌭 Mustar</span>
+<span class="badge">🌱 Susan</span>
+</div>
+
+<p style="margin-top:15px;color:#666;">
+(Laktóz, Glutén, Szója, Zeller, Mustár, Szezámmag)
+</p>
+
+</div>
+
+<footer>
+Meniu informativ • Actualizat automat
+</footer>
+
+</div>
+
 </body>
 </html>
