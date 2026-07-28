@@ -346,17 +346,16 @@ function openTab(tabName) {
 const SHEET_ID = '2PACX-1vQNvpQ2f9VQ2Sfk8I8wt3F4gjB2qVCozB1gNbWkjroB1tkiduFJv6wMvrx8Tj3pmt8Rbgk0PjibqBYI';
 
 function renderGoogleSheetData() {
-    // A Google hivatalos JSONP lekérő hivatkozása
-    const scriptUrl = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pubhtml?widget=true&headers=false`;
+    // Közvetlen CSV letöltési hivatkozás (proxy nélkül)
+    const csvUrl = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`;
     
-    // Egy biztonságos iframe-mentes, rejtett adatleolvasó megoldás
-    fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`)}`)
+    fetch(csvUrl)
         .then(response => {
-            if (response.ok) return response.json();
-            throw new Error('Network response was not ok.');
+            if (response.ok) return response.text(); // json() helyett text()-et kérünk a CSV-hez!
+            throw new Error('Hálózati hiba történt a fájl letöltésekor.');
         })
-        .then(data => {
-            const csvText = data.contents;
+        .then(csvText => {
+            // csvText közvetlenül a szöveges CSV tartalom
             const rows = csvText.split('\n').map(row => row.split(','));
             
             let html = '<table class="custom-table"><thead><tr>';
