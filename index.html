@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meniu & Ingrediente</title>
+<title>Meniu & Grafic Monitorizare Ulei</title>
 
 <style>
 * {
@@ -21,21 +21,50 @@ body {
 }
 
 .container {
-    max-width: 700px;
+    max-width: 850px;
     margin: auto;
 }
 
-h1 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
+/* Tab navigáció gombok */
+.tab-navigation {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
     border-bottom: 2px solid #000;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
+.tab-button {
+    flex: 1;
+    padding: 12px 15px;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+    transition: all 0.2s ease;
+}
+
+.tab-button.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Stílusok a Meniu részhez */
 .section-title {
-    margin: 30px 0 15px;
+    margin: 15px 0;
     font-size: 18px;
     text-transform: uppercase;
     border-bottom: 1px solid #000;
@@ -58,54 +87,6 @@ h1 {
     padding-bottom: 4px;
 }
 
-.content ul {
-    list-style: none;
-}
-
-/* Pontozott kitöltő vonal az elem és a gramm között */
-.content li {
-    display: flex;
-    align-items: baseline;
-    padding: 4px 0;
-}
-
-.content li .name {
-    padding-right: 5px;
-    background: #fff;
-}
-
-.content li .dots {
-    flex-grow: 1;
-    border-bottom: 1px dotted #888;
-    margin: 0 5px;
-    position: relative;
-    top: -4px;
-}
-
-.content li .weight {
-    font-weight: bold;
-    padding-left: 5px;
-    background: #fff;
-    white-space: nowrap;
-}
-
-.allergens {
-    border: 1px solid #000;
-    border-radius: 4px;
-    padding: 15px;
-    margin-top: 25px;
-}
-
-.allergens h2 {
-    font-size: 16px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-}
-
-.allergen-list {
-    font-weight: bold;
-}
-
 .info-box {
     margin: 10px 0;
 }
@@ -121,7 +102,6 @@ h1 {
 }
 
 .info-box li {
-    display: list-item;
     padding: 2px 0;
 }
 
@@ -130,6 +110,51 @@ h1 {
     font-weight: bold;
     font-style: italic;
     font-size: 13px;
+}
+
+/* Egyedi dizájn az élő adatokhoz */
+.custom-table-wrapper {
+    margin-top: 20px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+}
+
+.custom-table th {
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.custom-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.badge-schimbare {
+    font-weight: bold;
+    color: #c0392b;
+}
+
+.badge-completare {
+    font-weight: bold;
+    color: #2980b9;
+}
+
+.loading-text {
+    font-weight: bold;
+    padding: 20px;
+    text-align: center;
 }
 
 footer {
@@ -143,7 +168,8 @@ footer {
 
 @media print {
     body { padding: 0; }
-    .card, .allergens { page-break-inside: avoid; }
+    .tab-navigation { display: none; }
+    .tab-content { display: block !important; }
 }
 </style>
 </head>
@@ -152,144 +178,231 @@ footer {
 
 <div class="container">
 
-<h2 class="section-title">Informații Specifice Ingrediente</h2>
+    <!-- Felső Fül Navigáció -->
+    <div class="tab-navigation">
+        <button class="tab-button active" onclick="openTab('meniu')">Ingrediente / Meniu</button>
+        <button class="tab-button" onclick="openTab('olaj')">Grafic Monitorizare Ulei</button>
+    </div>
 
-<div class="card">
-    <div class="card-title">DÖNER PUI (CARNE)</div>
-    <div class="content">
-        <div class="info-box">
-            <h3>Ingrediente: </h3>
-            <ul>
-                <li>Carne de pui (piept de pui cu piele, pulpe pui dezosate cu piele)</li>
-                <li>Coriandru, apă potabilă, sare alimentară, dextroză</li>
-                <li>Mirodenii cu muștar</li>
-                <li>Agent de îngroșare, amidon modificat</li>
-                <li>Proteină din soia</li>
-            </ul>
+    <!-- 1. TAB: MENÜ ÉS ÖSSZETEVŐK -->
+    <div id="meniu" class="tab-content active">
+        <h2 class="section-title">Informații Specifice Ingrediente</h2>
+
+        <div class="card">
+            <div class="card-title">DÖNER PUI (CARNE)</div>
+            <div class="content">
+                <div class="info-box">
+                    <h3>Ingrediente: </h3>
+                    <ul>
+                        <li>Carne de pui (piept de pui cu piele, pulpe pui dezosate cu piele)</li>
+                        <li>Coriandru, apă potabilă, sare alimentară, dextroză</li>
+                        <li>Mirodenii cu muștar</li>
+                        <li>Agent de îngroșare, amidon modificat</li>
+                        <li>Proteină din soia</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>Declarație nutrițională / 100g:</h3>
+                    <ul>
+                        <li>Valoare energetică: 136 kcal / 569 kJ</li>
+                        <li>Grăsimi: 7,1 g (din care acizi grași saturați: 1,9 g)</li>
+                        <li>Proteine: 17,8 g</li>
+                        <li>Fibre: 0,5 g</li>
+                        <li>Glucide: 0,2 g (din care zaharuri: 0,2 g)</li>
+                        <li>Sare: 1,3 g</li>
+                    </ul>
+                </div>
+
+                <div class="note">* Provine din produs congelat</div>
+            </div>
         </div>
 
-        <div class="info-box">
-            <h3>Declarație nutrițională / 100g:</h3>
-            <ul>
-                <li>Valoare energetică: 136 kcal / 569 kJ</li>
-                <li>Grăsimi: 7,1 g (din care acizi grași saturați: 1,9 g)</li>
-                <li>Proteine: 17,8 g</li>
-                <li>Fibre: 0,5 g</li>
-                <li>Glucide: 0,2 g (din care zaharuri: 0,2 g)</li>
-                <li>Sare: 1,3 g</li>
-            </ul>
+        <div class="card">
+            <div class="card-title">CARTOFI PRĂJIȚI</div>
+            <div class="content">
+                <div class="info-box">
+                    <h3>Informații nutriționale medii / 100g:</h3>
+                    <ul>
+                        <li>Valoare energetică: 594.8 kJ / 141.1 kcal</li>
+                        <li>Grăsimi: 3.8 g (din care acizi grași saturați: 0.36 g)</li>
+                        <li>Glucide: 24.3 g (din care zaharuri: 0.4 g)</li>
+                        <li>Fibre: 3.2 g</li>
+                        <li>Proteine: 3.3 g</li>
+                        <li>Sare: 0.045 g</li>
+                    </ul>
+                </div>
+
+                <div class="note">* Provine din produs congelat</div>
+            </div>
         </div>
 
-        <div class="note">
-            * Provine din produs congelat
+        <div class="card">
+            <div class="card-title">CHIFLE</div>
+            <div class="content">
+                <div class="info-box">
+                    <h3>Alergeni:</h3>
+                    <ul>
+                        <li>Cereale care conțin gluten și produse derivate</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>Poate conține urme de:</h3>
+                    <ul>
+                        <li>Lapte și produse derivate (inclusiv lactoză)</li>
+                        <li>Muștar și produse derivate</li>
+                        <li>Semințe de susan și produse derivate</li>
+                        <li>Soia și produse derivate</li>
+                    </ul>
+                </div>
+
+                <div class="note">* Provine din produs congelat</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">SOS DE MAIONEZĂ </div>
+            <div class="content">
+                <div class="info-box">
+                    <h3>Ingrediente: </h3>
+                    <ul>
+                        <li>Ulei vegetal de floarea-soarelui (40%), apă (40%)</li>
+                        <li>Muștar (apă, oțet din alcool etilic rafinat, boabe de muștar, zahăr, sare)</li>
+                        <li>Zahăr</li>
+                        <li>Oțet din alcool etilic rafinat</li>
+                        <li>Amidon modificat de porumb și de cartof</li>
+                        <li>Sare</li>
+                        <li>Acidifiant (acid lactic)</li>
+                        <li>Stabilizator (gumă de xantan)</li>
+                        <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
+                        <li>Praf de ou integral (0,19%)</li>
+                        <li>Colorant (caroteni)</li>
+                        <li>Antioxidant (calciu-disodic-EDTA)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">SOS DIN PIURE DE ROȘII DULCE</div>
+            <div class="content">
+                <div class="info-box">
+                    <h3>Ingrediente: </h3>
+                    <ul>
+                        <li>Piure de roșii (63%), apă, zahăr</li>
+                        <li>Amidon modificat din porumb, sare</li>
+                        <li>Oțet din alcool, acidifiant (acid citric)</li>
+                        <li>Condimente, aromă de tomate</li>
+                        <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
+                        <li>Aromă de tomate</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <ul>
+                        <li>Piure de roșii obținut din pastă de tomate de origine UE și din afara UE.</li>
+                        <li>PRODUS PASTEURIZAT</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-title">CARTOFI PRĂJIȚI</div>
-    <div class="content">
-        <div class="info-box">
-            <h3>Informații nutriționale medii / 100g:</h3>
-            <ul>
-                <li>Valoare energetică: 594.8 kJ / 141.1 kcal</li>
-                <li>Grăsimi: 3.8 g (din care acizi grași saturați: 0.36 g)</li>
-                <li>Glucide: 24.3 g (din care zaharuri: 0.4 g)</li>
-                <li>Fibre: 3.2 g</li>
-                <li>Proteine: 3.3 g</li>
-                <li>Sare: 0.045 g</li>
-            </ul>
-        </div>
-
-        <div class="note">
-            * Provine din produs congelat
+    <!-- 2. TAB: EGYEDI KINÉZETŰ ÉLŐ GOOGLE SHEETS ADATOK -->
+    <div id="olaj" class="tab-content">
+        <h2 class="section-title">Grafic Monitorizare Ulei (Live Excel Data)</h2>
+        
+        <div class="custom-table-wrapper">
+            <div id="loading" class="loading-text">Informațiile se încarcă din baza de date...</div>
+            <div id="table-container"></div>
         </div>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-title">CHIFLE</div>
-    <div class="content">
-        <div class="info-box">
-            <h3>Alergeni:</h3>
-            <ul>
-                <li>Cereale care conțin gluten și produse derivate</li>
-            </ul>
-        </div>
-
-        <div class="info-box">
-            <h3>Poate conține urme de:</h3>
-            <ul>
-                <li>Lapte și produse derivate (inclusiv lactoză)</li>
-                <li>Muștar și produse derivate</li>
-                <li>Semințe de susan și produse derivate</li>
-                <li>Soia și produse derivate</li>
-            </ul>
-        </div>
-
-        <div class="note">
-            * Provine din produs congelat
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-title">SOS DE MAIONEZĂ </div>
-    <div class="content">
-        <div class="info-box">
-            <h3>Ingrediente: </h3>
-            <ul>
-                <li>Ulei vegetal de floarea-soarelui (40%), apă (40%)</li>
-                <li>Muștar (apă, oțet din alcool etilic rafinat, boabe de muștar, zahăr, sare)</li>
-                <li>Zahăr</li>
-                <li>Oțet din alcool etilic rafinat</li>
-                <li>Amidon modificat de porumb și de cartof</li>
-                <li>Sare</li>
-                <li>Acidifiant (acid lactic)</li>
-                <li>Stabilizator (gumă de xantan)</li>
-                <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
-                <li>Praf de ou integral (0,19%)</li>
-                <li>Colorant (caroteni)</li>
-                <li>Antioxidant (calciu-disodic-EDTA)</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-title">SOS DIN PIURE DE ROȘII DULCE</div>
-    <div class="content">
-        <div class="info-box">
-            <h3>Ingrediente: </h3>
-            <ul>
-                <li>Piure de roșii (63%), apă, zahăr</li>
-                <li>Amidon modificat din porumb, sare</li>
-                <li>Oțet din alcool, acidifiant (acid citric)</li>
-                <li>Condimente, aromă de tomate</li>
-                <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
-                <li>Aromă de tomate</li>
-            </ul>
-        </div>
-
-        <div class="info-box">
-            <ul>
-                <li>Piure de roșii obținut din pastă de tomate de origine UE și din afara UE.</li>
-                <li>PRODUS PASTEURIZAT</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<!-- <div class="allergens">
-    <h2>Alergeni Generali</h2>
-    <p class="allergen-list">Lactoză, Gluten, Soia, Țelină, Muștar, Susan</p>
-</div> -->
-
-<footer>
-Meniu informativ conform normelor în vigoare
-</footer>
+    <footer>
+        Meniu & Registru informativ conform normelor în vigoare
+    </footer>
 
 </div>
+
+<script>
+// Tab váltás függvény
+function openTab(tabName) {
+    var contents = document.getElementsByClassName("tab-content");
+    for (var i = 0; i < contents.length; i++) {
+        contents[i].classList.remove("active");
+    }
+
+    var buttons = document.getElementsByClassName("tab-button");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).classList.add("active");
+    event.currentTarget.classList.add("active");
+}
+
+// A Google Sheets táblázatod egyedi azonosítója (ID-ja)
+const SHEET_ID = '2PACX-1vQNvpQ2f9VQ2Sfk8I8wt3F4gjB2qVCozB1gNbWkjroB1tkiduFJv6wMvrx8Tj3pmt8Rbgk0PjibqBYI';
+
+function renderGoogleSheetData() {
+    // A Google hivatalos JSONP lekérő hivatkozása
+    const scriptUrl = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pubhtml?widget=true&headers=false`;
+    
+    // Egy biztonságos iframe-mentes, rejtett adatleolvasó megoldás
+    fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`)}`)
+        .then(response => {
+            if (response.ok) return response.json();
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            const csvText = data.contents;
+            const rows = csvText.split('\n').map(row => row.split(','));
+            
+            let html = '<table class="custom-table"><thead><tr>';
+            
+            // Fejléc
+            if (rows.length > 0 && rows[0].length > 0) {
+                rows[0].forEach(cell => {
+                    let cleanHeader = cell.replace(/"/g, '').trim();
+                    if(cleanHeader) html += `<th>${cleanHeader}</th>`;
+                });
+                html += '</tr></thead><tbody>';
+            }
+
+            // Adatsorok
+            for (let i = 1; i < rows.length; i++) {
+                if (rows[i].length > 1) {
+                    html += '<tr>';
+                    rows[i].forEach(cell => {
+                        let cleanText = cell.replace(/"/g, '').trim();
+                        
+                        if (cleanText.toLowerCase().includes('schimbare')) {
+                            cleanText = `<span class="badge-schimbare">${cleanText}</span>`;
+                        } else if (cleanText.toLowerCase().includes('completare')) {
+                            cleanText = `<span class="badge-completare">${cleanText}</span>`;
+                        }
+                        
+                        html += `<td>${cleanText}</td>`;
+                    });
+                    html += '</tr>';
+                }
+            }
+            
+            html += '</tbody></table>';
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('table-container').innerHTML = html;
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById('loading').innerText = 'Eroare la încărcarea datelor!';
+        });
+}
+
+// Betöltéskor automatikusan lefut
+window.onload = renderGoogleSheetData;
+</script>
 
 </body>
 </html>
