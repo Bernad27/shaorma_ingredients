@@ -342,56 +342,114 @@ function openTab(tabName) {
     event.currentTarget.classList.add("active");
 }
 
-// A Google Sheets táblázatod egyedi azonosítója (ID-ja)
 const SHEET_ID = '2PACX-1vQNvpQ2f9VQ2Sfk8I8wt3F4gjB2qVCozB1gNbWkjroB1tkiduFJv6wMvrx8Tj3pmt8Rbgk0PjibqBYI';
 
+// Román napnevek
+const DAY_NAMES_RO = ['DUMINICA', 'LUNI', 'MARTI', 'MIERCURI', 'JOI', 'VINERI', 'SAMBATA'];
+const MONTH_NAMES_RO = ['IANUARIE', 'FEBRUARIE', 'MARTIE', 'APRILIE', 'MAI', 'IUNIE', 'IULIE', 'AUGUST', 'SEPTEMBRIE', 'OCTOMBRIE', 'NOIEMBRIE', 'DECEMBRIE'];
+
 function renderGoogleSheetData() {
-    // Közvetlen CSV letöltési hivatkozás (proxy nélkül)
     const csvUrl = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`;
     
     fetch(csvUrl)
         .then(response => {
-            if (response.ok) return response.text(); // json() helyett text()-et kérünk a CSV-hez!
-            throw new Error('Hálózati hiba történt a fájl letöltésekor.');
+            if (response.ok) return response.text();
+            throw new Error('Hálózati hiba történt.');
         })
         .then(csvText => {
-            // csvText közvetlenül a szöveges CSV tartalom
             const rows = csvText.split('\n').map(row => row.split(','));
             
-            let html = '<table class="custom-table"><thead><tr>';
-            
-            // Fejléc
-            if (rows.length > 0 && rows[0].length > 0) {
-                rows[0].forEach(cell => {
-                    let cleanHeader = cell.replace(/"/g, '').trim();
-                    if(cleanHeader) html += `<th>${cleanHeader}</th>`;
-                });
-                html += '</tr></thead><tbody>';
-            }
+            // 1. Adatok feldolgozása és csoportosítása DÁTUM szerint
+            // Elvárás: Data formátum pl: "2026. 07. 01" vagy "2026-07-01"
+            const dataByDate = {}; // key: "YYYY-MM-DD", val: { schimbare: '6l', completare: '' }
 
-            // Adatsorok
             for (let i = 1; i < rows.length; i++) {
-                if (rows[i].length > 1) {
-                    html += '<tr>';
-                    rows[i].forEach(cell => {
-                        let cleanText = cell.replace(/"/g, '').trim();
-                        
-                        if (cleanText.toLowerCase().includes('schimbare')) {
-                            cleanText = `<span class="badge-schimbare">${cleanText}</span>`;
-                        } else if (cleanText.toLowerCase().includes('completare')) {
-                            cleanText = `<span class="badge-completare">${cleanText}</span>`;
+                if (rows[i].length >= 4) {
+                    let rawDate = rows[i][1].replace(/"/g, '').trim(); // DATA oszlop
+                    let type = rows[i][2].replace(/"/g, '').trim().toLowerCase(); // TIP OPERATIUNE
+                    let qty = rows[i][3].replace(/"/g, '').trim(); // CANTITATE
+
+                    if (!rawDate) continue;
+
+                    // Dátum normalizálása (pl. "2026. 07. 01" -> "2026-07-01")
+                    let cleanDateStr = rawDate.replace(/\.\s*/g, '-').replace(/-$/, '');
+                    let dateParts = cleanDateStr.split('-');
+                    if (dateParts.length === 3) {
+                        let yyyy = dateParts[0];
+                        let mm = dateParts[1].padStart(2, '0');
+                        let dd = dateParts[2].padStart(2, '0');
+                        let formattedKey = `${yyyy}-${mm}-${dd}`;
+
+                        if (!dataByDate[formattedKey]) {
+                            dataByDate[formattedKey] = { schimbare: '', completare: '' };
                         }
-                        
-                        html += `<td>${cleanText}</td>`;
-                    });
-                    html += '</tr>';
+
+                        if (type.includes('schimbare')) {
+                            dataByDate[formattedKey].schimbare = qty ? qty + 'l' : '';
+                        } else if (type.includes('completare')) {
+                            dataByDate[formattedKey].completare = qty ? qty + 'l' : '';
+                        }
+                    }
                 }
             }
-            
-            html += '</tbody></table>';
+
+            // Hónapok azonosítása (pl. 2026-07)
+            const months = [...new Set(Object.keys(dataByDate).map(d => d.substring(0, 7)))].sort();
+
+            let fullHtml = '';
+
+            // 2. Minden hónapra elkészítjük a papír alapú táblázatot
+            months.forEach(monthKey => {
+                const [year, monthStr] = monthKey.split('-');
+                const monthIdx = parseInt(monthStr, 10) - 1;
+                const totalDays = new Date(year, monthIdx + 1, 0).getDate(); // Hónap napjainak száma (pl. 31)
+
+                fullHtml += `<div class="month-container">`;
+                fullHtml += `<h2 class="month-title">GRAFIC MONITORIZARE - ${MONTH_NAMES_RO[monthIdx]} ${year}</h2>`;
+
+                // 7 napos blokkokra bontás (1-7, 8-14, 15-21, 22-28, 29-31)
+                for (let startDay = 1; startDay <= totalDays; startDay += 7) {
+                    let endDay = Math.min(startDay + 6, totalDays);
+                    
+                    fullHtml += `<div class="week-block">`;
+                    fullHtml += `<div class="week-header">Saptamana: ${startDay}-${endDay}</div>`;
+                    fullHtml += `<table class="paper-table">`;
+                    
+                    // Fejléc (ZIUA + Napok nevei)
+                    fullHtml += `<thead><tr><th class="col-title">ZIUA</th>`;
+                    for (let day = startDay; day <= endDay; day++) {
+                        let currentDate = new Date(year, monthIdx, day);
+                        let dayName = DAY_NAMES_RO[currentDate.getDay()];
+                        fullHtml += `<th>${dayName}<br><small>(${day})</small></th>`;
+                    }
+                    fullHtml += `</tr></thead><tbody>`;
+
+                    // Sor 1: Schimbare ulei
+                    fullHtml += `<tr><td class="row-title">Schimbare ulei</td>`;
+                    for (let day = startDay; day <= endDay; day++) {
+                        let dateKey = `${year}-${monthStr}-${String(day).padStart(2, '0')}`;
+                        let val = dataByDate[dateKey] ? dataByDate[dateKey].schimbare : '';
+                        fullHtml += `<td>${val}</td>`;
+                    }
+                    fullHtml += `</tr>`;
+
+                    // Sor 2: Completare ulei
+                    fullHtml += `<tr><td class="row-title">Completare ulei</td>`;
+                    for (let day = startDay; day <= endDay; day++) {
+                        let dateKey = `${year}-${monthStr}-${String(day).padStart(2, '0')}`;
+                        let val = dataByDate[dateKey] ? dataByDate[dateKey].completare : '';
+                        fullHtml += `<td>${val}</td>`;
+                    }
+                    fullHtml += `</tr>`;
+
+                    fullHtml += `</tbody></table></div>`;
+                }
+
+                fullHtml += `</div>`;
+            });
 
             document.getElementById('loading').style.display = 'none';
-            document.getElementById('table-container').innerHTML = html;
+            document.getElementById('table-container').innerHTML = fullHtml;
         })
         .catch(error => {
             console.error(error);
