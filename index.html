@@ -168,7 +168,7 @@ footer {
 
 @media print {
     body { padding: 0; }
-    .tab-navigation { display: none; }
+    .tab-navigation, .admin-bar { display: none; }
     .tab-content { display: block !important; }
 }
 
@@ -234,10 +234,50 @@ footer {
     padding-left: 8px;
 }
 
-.paper-table td {
+.paper-table td.editable-cell {
     height: 30px;
     font-weight: bold;
     color: #00008b; /* Kézírás-szerű kék szín a litereknek */
+    cursor: pointer;
+}
+
+.paper-table td.editable-cell:focus {
+    background-color: #e8f0fe;
+    outline: 2px solid #1a73e8;
+}
+
+/* Admin sáv stílus */
+.admin-bar {
+    background: #f9f9f9;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+
+.admin-bar input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.admin-bar button {
+    padding: 8px 16px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.admin-bar button:hover {
+    background: #218838;
 }
 </style>
 </head>
@@ -381,6 +421,13 @@ footer {
     <div id="olaj" class="tab-content">
         <h2 class="section-title">Grafic Monitorizare Ulei (Live Excel Data)</h2>
         
+        <!-- Admin Sáv jelszóhoz és mentéshez -->
+        <div class="admin-bar">
+            <input type="password" id="adminPassword" placeholder="Jelszó a mentéshez...">
+            <button onclick="saveTableData()">💾 Módosítások Mentése</button>
+            <span id="saveStatus" style="font-weight: bold; margin-left: 10px;"></span>
+        </div>
+
         <div class="custom-table-wrapper">
             <div id="loading" class="loading-text">Informațiile se încarcă din baza de date...</div>
             <div id="table-container"></div>
@@ -412,6 +459,9 @@ function openTab(tabName) {
 
 const SHEET_ID = '2PACX-1vQNvpQ2f9VQ2Sfk8I8wt3F4gjB2qVCozB1gNbWkjroB1tkiduFJv6wMvrx8Tj3pmt8Rbgk0PjibqBYI';
 
+// ⚠️ IDE MÁSOLD BE A GOOGLE APPS SCRIPT WEBALKALMAZÁS URL LINKJÉT:
+const SCRIPT_URL = 'IDE_MÁSOLD_A_LINKET';
+
 // Román napnevek
 const DAY_NAMES_RO = ['DUMINICA', 'LUNI', 'MARTI', 'MIERCURI', 'JOI', 'VINERI', 'SAMBATA'];
 const MONTH_NAMES_RO = ['IANUARIE', 'FEBRUARIE', 'MARTIE', 'APRILIE', 'MAI', 'IUNIE', 'IULIE', 'AUGUST', 'SEPTEMBRIE', 'OCTOMBRIE', 'NOIEMBRIE', 'DECEMBRIE'];
@@ -426,20 +476,16 @@ function renderGoogleSheetData() {
         })
         .then(csvText => {
             const rows = csvText.split('\n').map(row => row.split(','));
-            
-            // 1. Adatok feldolgozása és csoportosítása DÁTUM szerint
-            // Elvárás: Data formátum pl: "2026. 07. 01" vagy "2026-07-01"
-            const dataByDate = {}; // key: "YYYY-MM-DD", val: { schimbare: '6l', completare: '' }
+            const dataByDate = {};
 
             for (let i = 1; i < rows.length; i++) {
                 if (rows[i].length >= 4) {
-                    let rawDate = rows[i][1].replace(/"/g, '').trim(); // DATA oszlop
-                    let type = rows[i][2].replace(/"/g, '').trim().toLowerCase(); // TIP OPERATIUNE
-                    let qty = rows[i][3].replace(/"/g, '').trim(); // CANTITATE
+                    let rawDate = rows[i][1].replace(/"/g, '').trim(); 
+                    let type = rows[i][2].replace(/"/g, '').trim().toLowerCase(); 
+                    let qty = rows[i][3].replace(/"/g, '').replace(/l/g, '').trim(); 
 
                     if (!rawDate) continue;
 
-                    // Dátum normalizálása (pl. "2026. 07. 01" -> "2026-07-01")
                     let cleanDateStr = rawDate.replace(/\.\s*/g, '-').replace(/-$/, '');
                     let dateParts = cleanDateStr.split('-');
                     if (dateParts.length === 3) {
@@ -453,29 +499,25 @@ function renderGoogleSheetData() {
                         }
 
                         if (type.includes('schimbare')) {
-                            dataByDate[formattedKey].schimbare = qty ? qty + 'l' : '';
+                            dataByDate[formattedKey].schimbare = qty;
                         } else if (type.includes('completare')) {
-                            dataByDate[formattedKey].completare = qty ? qty + 'l' : '';
+                            dataByDate[formattedKey].completare = qty;
                         }
                     }
                 }
             }
 
-            // Hónapok azonosítása (pl. 2026-07)
             const months = [...new Set(Object.keys(dataByDate).map(d => d.substring(0, 7)))].sort();
-
             let fullHtml = '';
 
-            // 2. Minden hónapra elkészítjük a papír alapú táblázatot
             months.forEach(monthKey => {
                 const [year, monthStr] = monthKey.split('-');
                 const monthIdx = parseInt(monthStr, 10) - 1;
-                const totalDays = new Date(year, monthIdx + 1, 0).getDate(); // Hónap napjainak száma (pl. 31)
+                const totalDays = new Date(year, monthIdx + 1, 0).getDate();
 
                 fullHtml += `<div class="month-container">`;
                 fullHtml += `<h2 class="month-title">GRAFIC MONITORIZARE - ${MONTH_NAMES_RO[monthIdx]} ${year}</h2>`;
 
-                // 7 napos blokkokra bontás (1-7, 8-14, 15-21, 22-28, 29-31)
                 for (let startDay = 1; startDay <= totalDays; startDay += 7) {
                     let endDay = Math.min(startDay + 6, totalDays);
                     
@@ -483,7 +525,6 @@ function renderGoogleSheetData() {
                     fullHtml += `<div class="week-header">Saptamana: ${startDay}-${endDay}</div>`;
                     fullHtml += `<table class="paper-table">`;
                     
-                    // Fejléc (ZIUA + Napok nevei)
                     fullHtml += `<thead><tr><th class="col-title">ZIUA</th>`;
                     for (let day = startDay; day <= endDay; day++) {
                         let currentDate = new Date(year, monthIdx, day);
@@ -492,21 +533,21 @@ function renderGoogleSheetData() {
                     }
                     fullHtml += `</tr></thead><tbody>`;
 
-                    // Sor 1: Schimbare ulei
+                    // Sor 1: Schimbare ulei (szerkeszthető cellák)
                     fullHtml += `<tr><td class="row-title">Schimbare ulei</td>`;
                     for (let day = startDay; day <= endDay; day++) {
                         let dateKey = `${year}-${monthStr}-${String(day).padStart(2, '0')}`;
                         let val = dataByDate[dateKey] ? dataByDate[dateKey].schimbare : '';
-                        fullHtml += `<td>${val}</td>`;
+                        fullHtml += `<td contenteditable="true" data-date="${year}. ${monthStr}. ${String(day).padStart(2, '0')}" data-type="Schimbare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
                     }
                     fullHtml += `</tr>`;
 
-                    // Sor 2: Completare ulei
+                    // Sor 2: Completare ulei (szerkeszthető cellák)
                     fullHtml += `<tr><td class="row-title">Completare ulei</td>`;
                     for (let day = startDay; day <= endDay; day++) {
                         let dateKey = `${year}-${monthStr}-${String(day).padStart(2, '0')}`;
                         let val = dataByDate[dateKey] ? dataByDate[dateKey].completare : '';
-                        fullHtml += `<td>${val}</td>`;
+                        fullHtml += `<td contenteditable="true" data-date="${year}. ${monthStr}. ${String(day).padStart(2, '0')}" data-type="Completare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
                     }
                     fullHtml += `</tr>`;
 
@@ -523,6 +564,52 @@ function renderGoogleSheetData() {
             console.error(error);
             document.getElementById('loading').innerText = 'Eroare la încărcarea datelor!';
         });
+}
+
+// Mentés gomb funkció
+function saveTableData() {
+    const password = document.getElementById('adminPassword').value;
+    const statusText = document.getElementById('saveStatus');
+
+    if (!password) {
+        alert('Kérlek add meg a jelszót a mentéshez!');
+        return;
+    }
+
+    const editableCells = document.querySelectorAll('.editable-cell');
+    const updates = [];
+
+    editableCells.forEach(cell => {
+        let rawVal = cell.innerText.replace(/l/g, '').trim();
+        updates.push({
+            date: cell.getAttribute('data-date'),
+            type: cell.getAttribute('data-type'),
+            quantity: rawVal
+        });
+    });
+
+    statusText.style.color = 'black';
+    statusText.innerText = ' Mentés...';
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: password, updates: updates })
+    })
+    .then(() => {
+        statusText.style.color = 'green';
+        statusText.innerText = ' SIKERES MENTÉS!';
+        setTimeout(() => {
+            statusText.innerText = '';
+            renderGoogleSheetData();
+        }, 2500);
+    })
+    .catch(err => {
+        console.error(err);
+        statusText.style.color = 'red';
+        statusText.innerText = ' Hiba történt!';
+    });
 }
 
 // Betöltéskor automatikusan lefut
