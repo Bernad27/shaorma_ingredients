@@ -458,16 +458,13 @@ function openTab(tabName) {
 }
 
 const SHEET_ID = '2PACX-1vQNvpQ2f9VQ2Sfk8I8wt3F4gjB2qVCozB1gNbWkjroB1tkiduFJv6wMvrx8Tj3pmt8Rbgk0PjibqBYI';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrZUEwQTf6H8ewX9mxkY3opauPDe5AOd1rJHjM-S2BEzHSEvbrpnj3nG6nup89kNKQkw/exec';
 
-// ⚠️ IDE MÁSOLD BE A GOOGLE APPS SCRIPT WEBALKALMAZÁS URL LINKJÉT:
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4bL7I4iujT53_rex9Rrn6S-x5SpFjRz2cjxEQsqtM4smCi3aXedt5wcfovzMAi5xjPA/exec';
-
-// Román napnevek
 const DAY_NAMES_RO = ['DUMINICA', 'LUNI', 'MARTI', 'MIERCURI', 'JOI', 'VINERI', 'SAMBATA'];
 const MONTH_NAMES_RO = ['IANUARIE', 'FEBRUARIE', 'MARTIE', 'APRILIE', 'MAI', 'IUNIE', 'IULIE', 'AUGUST', 'SEPTEMBRIE', 'OCTOMBRIE', 'NOIEMBRIE', 'DECEMBRIE'];
 
 function renderGoogleSheetData() {
-    const csvUrl = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv`;
+    const csvUrl = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv&t=${new Date().getTime()}`;
     
     fetch(csvUrl)
         .then(response => {
@@ -486,12 +483,12 @@ function renderGoogleSheetData() {
 
                     if (!rawDate) continue;
 
-                    let cleanDateStr = rawDate.replace(/\.\s*/g, '-').replace(/-$/, '');
-                    let dateParts = cleanDateStr.split('-');
-                    if (dateParts.length === 3) {
-                        let yyyy = dateParts[0];
-                        let mm = dateParts[1].padStart(2, '0');
-                        let dd = dateParts[2].padStart(2, '0');
+                    // Elfogadjuk a "2026. 07. 01" formátumot
+                    let parts = rawDate.split('.');
+                    if (parts.length >= 3) {
+                        let yyyy = parts[0].trim();
+                        let mm = parts[1].trim().padStart(2, '0');
+                        let dd = parts[2].trim().padStart(2, '0');
                         let formattedKey = `${yyyy}-${mm}-${dd}`;
 
                         if (!dataByDate[formattedKey]) {
@@ -533,21 +530,29 @@ function renderGoogleSheetData() {
                     }
                     fullHtml += `</tr></thead><tbody>`;
 
-                    // Sor 1: Schimbare ulei (szerkeszthető cellák)
+                    // Sor 1: Schimbare ulei
                     fullHtml += `<tr><td class="row-title">Schimbare ulei</td>`;
                     for (let day = startDay; day <= endDay; day++) {
-                        let dateKey = `${year}-${monthStr}-${String(day).padStart(2, '0')}`;
+                        let dayFormatted = String(day).padStart(2, '0');
+                        let dateKey = `${year}-${monthStr}-${dayFormatted}`;
+                        // Ezzel a pontos formátummal küldjük vissza az adatsort: "2026. 07. 01"
+                        let customFormattedDate = `${year}. ${monthStr}. ${dayFormatted}`;
+                        
                         let val = dataByDate[dateKey] ? dataByDate[dateKey].schimbare : '';
-                        fullHtml += `<td contenteditable="true" data-date="${year}. ${monthStr}. ${String(day).padStart(2, '0')}" data-type="Schimbare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
+                        fullHtml += `<td contenteditable="true" data-date="${customFormattedDate}" data-type="Schimbare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
                     }
                     fullHtml += `</tr>`;
 
-                    // Sor 2: Completare ulei (szerkeszthető cellák)
+                    // Sor 2: Completare ulei
                     fullHtml += `<tr><td class="row-title">Completare ulei</td>`;
                     for (let day = startDay; day <= endDay; day++) {
-                        let dateKey = `${year}-${monthStr}-${String(day).padStart(2, '0')}`;
+                        let dayFormatted = String(day).padStart(2, '0');
+                        let dateKey = `${year}-${monthStr}-${dayFormatted}`;
+                        // Ezzel a pontos formátummal küldjük vissza az adatsort: "2026. 07. 01"
+                        let customFormattedDate = `${year}. ${monthStr}. ${dayFormatted}`;
+
                         let val = dataByDate[dateKey] ? dataByDate[dateKey].completare : '';
-                        fullHtml += `<td contenteditable="true" data-date="${year}. ${monthStr}. ${String(day).padStart(2, '0')}" data-type="Completare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
+                        fullHtml += `<td contenteditable="true" data-date="${customFormattedDate}" data-type="Completare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
                     }
                     fullHtml += `</tr>`;
 
@@ -566,7 +571,6 @@ function renderGoogleSheetData() {
         });
 }
 
-// Mentés gomb funkció
 function saveTableData() {
     const password = document.getElementById('adminPassword').value;
     const statusText = document.getElementById('saveStatus');
@@ -603,7 +607,7 @@ function saveTableData() {
         setTimeout(() => {
             statusText.innerText = '';
             renderGoogleSheetData();
-        }, 2500);
+        }, 3000);
     })
     .catch(err => {
         console.error(err);
@@ -612,7 +616,6 @@ function saveTableData() {
     });
 }
 
-// Betöltéskor automatikusan lefut
 window.onload = renderGoogleSheetData;
 </script>
 
