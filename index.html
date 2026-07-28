@@ -458,7 +458,7 @@ function openTab(tabName) {
 }
 
 const SHEET_ID = '2PACX-1vQNvpQ2f9VQ2Sfk8I8wt3F4gjB2qVCozB1gNbWkjroB1tkiduFJv6wMvrx8Tj3pmt8Rbgk0PjibqBYI';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrZUEwQTf6H8ewX9mxkY3opauPDe5AOd1rJHjM-S2BEzHSEvbrpnj3nG6nup89kNKQkw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfBNfBgDhD6Dyc90YpEWtwrLHu3enaEW_KbmMQZwBIMsGhFNg_dkQTMV4HG2yU_rEvOg/exec';
 
 const DAY_NAMES_RO = ['DUMINICA', 'LUNI', 'MARTI', 'MIERCURI', 'JOI', 'VINERI', 'SAMBATA'];
 const MONTH_NAMES_RO = ['IANUARIE', 'FEBRUARIE', 'MARTIE', 'APRILIE', 'MAI', 'IUNIE', 'IULIE', 'AUGUST', 'SEPTEMBRIE', 'OCTOMBRIE', 'NOIEMBRIE', 'DECEMBRIE'];
@@ -585,11 +585,13 @@ function saveTableData() {
 
     editableCells.forEach(cell => {
         let rawVal = cell.innerText.replace(/l/g, '').trim();
-        updates.push({
-            date: cell.getAttribute('data-date'),
-            type: cell.getAttribute('data-type'),
-            quantity: rawVal
-        });
+        if (rawVal !== '') {
+            updates.push({
+                date: cell.getAttribute('data-date'),
+                type: cell.getAttribute('data-type'),
+                quantity: rawVal
+            });
+        }
     });
 
     statusText.style.color = 'black';
@@ -597,22 +599,27 @@ function saveTableData() {
 
     fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' }, // no-cors eltávolítva, hogy válasz érkezhessen!
         body: JSON.stringify({ password: password, updates: updates })
     })
-    .then(() => {
-        statusText.style.color = 'green';
-        statusText.innerText = ' SIKERES MENTÉS!';
-        setTimeout(() => {
-            statusText.innerText = '';
+    .then(response => response.json())
+    .then(res => {
+        if (res.status === 'success') {
+            statusText.style.color = 'green';
+            statusText.innerText = ' SIKERES MENTÉS!';
+            alert("Eredmény: " + res.message + "\nRészletek: " + res.debug);
             renderGoogleSheetData();
-        }, 3000);
+        } else {
+            statusText.style.color = 'red';
+            statusText.innerText = ' Hiba: ' + res.message;
+            alert("Hiba történt: " + res.message);
+        }
     })
     .catch(err => {
         console.error(err);
         statusText.style.color = 'red';
         statusText.innerText = ' Hiba történt!';
+        alert("Küldési hiba! Ellenőrizd a konzolt (F12).");
     });
 }
 
