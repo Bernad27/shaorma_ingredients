@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meniu & Grafic Monitorizare Ulei</title>
+<title>Informații Specifice Ingrediente / Meniu</title>
 
 <style>
 * {
@@ -23,43 +23,6 @@ body {
 .container {
     max-width: 850px;
     margin: auto;
-}
-
-/* Tab navigáció gombok */
-.tab-navigation {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-    border-bottom: 2px solid #000;
-    padding-bottom: 5px;
-}
-
-.tab-button {
-    flex: 1;
-    padding: 12px 15px;
-    background: #f1f1f1;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-    border-radius: 5px 5px 0 0;
-    transition: all 0.2s ease;
-}
-
-.tab-button.active {
-    background: #000;
-    color: #fff;
-    border-color: #000;
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
 }
 
 /* Stílusok a Meniu részhez */
@@ -112,51 +75,6 @@ body {
     font-size: 13px;
 }
 
-/* Egyedi dizájn az élő adatokhoz */
-.custom-table-wrapper {
-    margin-top: 20px;
-}
-
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    font-size: 13px;
-}
-
-.custom-table th, .custom-table td {
-    border: 1px solid #000;
-    padding: 8px;
-    text-align: left;
-}
-
-.custom-table th {
-    background: #000;
-    color: #fff;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.custom-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.badge-schimbare {
-    font-weight: bold;
-    color: #c0392b;
-}
-
-.badge-completare {
-    font-weight: bold;
-    color: #2980b9;
-}
-
-.loading-text {
-    font-weight: bold;
-    padding: 20px;
-    text-align: center;
-}
-
 footer {
     text-align: center;
     margin-top: 25px;
@@ -168,116 +86,6 @@ footer {
 
 @media print {
     body { padding: 0; }
-    .tab-navigation, .admin-bar { display: none; }
-    .tab-content { display: block !important; }
-}
-
-/* Olaj mérés CSS */
-.month-container {
-    background: #fff;
-    padding: 20px;
-    margin-bottom: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.month-title {
-    text-align: right;
-    font-family: sans-serif;
-    font-weight: bold;
-    color: #333;
-    border-bottom: 2px solid #000;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.week-block {
-    margin-bottom: 25px;
-}
-
-.week-header {
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 5px;
-    color: #444;
-}
-
-.paper-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: sans-serif;
-    text-align: center;
-}
-
-.paper-table th, .paper-table td {
-    border: 1px solid #777;
-    padding: 8px 4px;
-    font-size: 13px;
-}
-
-.paper-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.paper-table .col-title {
-    width: 15%;
-    background-color: #e6e6e6;
-}
-
-.paper-table .row-title {
-    text-align: left;
-    font-size: 11px;
-    font-weight: bold;
-    background-color: #f9f9f9;
-    padding-left: 8px;
-}
-
-.paper-table td.editable-cell {
-    height: 30px;
-    font-weight: bold;
-    color: #00008b; /* Kézírás-szerű kék szín a litereknek */
-    cursor: pointer;
-}
-
-.paper-table td.editable-cell:focus {
-    background-color: #e8f0fe;
-    outline: 2px solid #1a73e8;
-}
-
-/* Admin sáv stílus */
-.admin-bar {
-    background: #f9f9f9;
-    padding: 12px 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    border: 1px solid #ccc;
-}
-
-.admin-bar input {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.admin-bar button {
-    padding: 8px 16px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.admin-bar button:hover {
-    background: #218838;
 }
 </style>
 </head>
@@ -286,151 +94,125 @@ footer {
 
 <div class="container">
 
-    <!-- Felső Fül Navigáció -->
-    <div class="tab-navigation">
-        <button class="tab-button active" onclick="openTab('meniu')">Ingrediente / Meniu</button>
-        <button class="tab-button" onclick="openTab('olaj')">Grafic Monitorizare Ulei</button>
+    <h2 class="section-title">Informații Specifice Ingrediente</h2>
+
+    <div class="card">
+        <div class="card-title">DÖNER PUI (CARNE)</div>
+        <div class="content">
+            <div class="info-box">
+                <h3>Ingrediente: </h3>
+                <ul>
+                    <li>Carne de pui (piept de pui cu piele, pulpe pui dezosate cu piele)</li>
+                    <li>Coriandru, apă potabilă, sare alimentară, dextroză</li>
+                    <li>Mirodenii cu muștar</li>
+                    <li>Agent de îngroșare, amidon modificat</li>
+                    <li>Proteină din soia</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3>Declarație nutrițională / 100g:</h3>
+                <ul>
+                    <li>Valoare energetică: 136 kcal / 569 kJ</li>
+                    <li>Grăsimi: 7,1 g (din care acizi grași saturați: 1,9 g)</li>
+                    <li>Proteine: 17,8 g</li>
+                    <li>Fibre: 0,5 g</li>
+                    <li>Glucide: 0,2 g (din care zaharuri: 0,2 g)</li>
+                    <li>Sare: 1,3 g</li>
+                </ul>
+            </div>
+
+            <div class="note">* Provine din produs congelat</div>
+        </div>
     </div>
 
-    <!-- 1. TAB: MENÜ ÉS ÖSSZETEVŐK -->
-    <div id="meniu" class="tab-content active">
-        <h2 class="section-title">Informații Specifice Ingrediente</h2>
-
-        <div class="card">
-            <div class="card-title">DÖNER PUI (CARNE)</div>
-            <div class="content">
-                <div class="info-box">
-                    <h3>Ingrediente: </h3>
-                    <ul>
-                        <li>Carne de pui (piept de pui cu piele, pulpe pui dezosate cu piele)</li>
-                        <li>Coriandru, apă potabilă, sare alimentară, dextroză</li>
-                        <li>Mirodenii cu muștar</li>
-                        <li>Agent de îngroșare, amidon modificat</li>
-                        <li>Proteină din soia</li>
-                    </ul>
-                </div>
-
-                <div class="info-box">
-                    <h3>Declarație nutrițională / 100g:</h3>
-                    <ul>
-                        <li>Valoare energetică: 136 kcal / 569 kJ</li>
-                        <li>Grăsimi: 7,1 g (din care acizi grași saturați: 1,9 g)</li>
-                        <li>Proteine: 17,8 g</li>
-                        <li>Fibre: 0,5 g</li>
-                        <li>Glucide: 0,2 g (din care zaharuri: 0,2 g)</li>
-                        <li>Sare: 1,3 g</li>
-                    </ul>
-                </div>
-
-                <div class="note">* Provine din produs congelat</div>
+    <div class="card">
+        <div class="card-title">CARTOFI PRĂJIȚI</div>
+        <div class="content">
+            <div class="info-box">
+                <h3>Informații nutriționale medii / 100g:</h3>
+                <ul>
+                    <li>Valoare energetică: 594.8 kJ / 141.1 kcal</li>
+                    <li>Grăsimi: 3.8 g (din care acizi grași saturați: 0.36 g)</li>
+                    <li>Glucide: 24.3 g (din care zaharuri: 0.4 g)</li>
+                    <li>Fibre: 3.2 g</li>
+                    <li>Proteine: 3.3 g</li>
+                    <li>Sare: 0.045 g</li>
+                </ul>
             </div>
+
+            <div class="note">* Provine din produs congelat</div>
         </div>
+    </div>
 
-        <div class="card">
-            <div class="card-title">CARTOFI PRĂJIȚI</div>
-            <div class="content">
-                <div class="info-box">
-                    <h3>Informații nutriționale medii / 100g:</h3>
-                    <ul>
-                        <li>Valoare energetică: 594.8 kJ / 141.1 kcal</li>
-                        <li>Grăsimi: 3.8 g (din care acizi grași saturați: 0.36 g)</li>
-                        <li>Glucide: 24.3 g (din care zaharuri: 0.4 g)</li>
-                        <li>Fibre: 3.2 g</li>
-                        <li>Proteine: 3.3 g</li>
-                        <li>Sare: 0.045 g</li>
-                    </ul>
-                </div>
-
-                <div class="note">* Provine din produs congelat</div>
+    <div class="card">
+        <div class="card-title">CHIFLE</div>
+        <div class="content">
+            <div class="info-box">
+                <h3>Alergeni:</h3>
+                <ul>
+                    <li>Cereale care conțin gluten și produse derivate</li>
+                </ul>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-title">CHIFLE</div>
-            <div class="content">
-                <div class="info-box">
-                    <h3>Alergeni:</h3>
-                    <ul>
-                        <li>Cereale care conțin gluten și produse derivate</li>
-                    </ul>
-                </div>
-
-                <div class="info-box">
-                    <h3>Poate conține urme de:</h3>
-                    <ul>
-                        <li>Lapte și produse derivate (inclusiv lactoză)</li>
-                        <li>Muștar și produse derivate</li>
-                        <li>Semințe de susan și produse derivate</li>
-                        <li>Soia și produse derivate</li>
-                    </ul>
-                </div>
-
-                <div class="note">* Provine din produs congelat</div>
+            <div class="info-box">
+                <h3>Poate conține urme de:</h3>
+                <ul>
+                    <li>Lapte și produse derivate (inclusiv lactoză)</li>
+                    <li>Muștar și produse derivate</li>
+                    <li>Semințe de susan și produse derivate</li>
+                    <li>Soia și produse derivate</li>
+                </ul>
             </div>
+
+            <div class="note">* Provine din produs congelat</div>
         </div>
+    </div>
 
-        <div class="card">
-            <div class="card-title">SOS DE MAIONEZĂ </div>
-            <div class="content">
-                <div class="info-box">
-                    <h3>Ingrediente: </h3>
-                    <ul>
-                        <li>Ulei vegetal de floarea-soarelui (40%), apă (40%)</li>
-                        <li>Muștar (apă, oțet din alcool etilic rafinat, boabe de muștar, zahăr, sare)</li>
-                        <li>Zahăr</li>
-                        <li>Oțet din alcool etilic rafinat</li>
-                        <li>Amidon modificat de porumb și de cartof</li>
-                        <li>Sare</li>
-                        <li>Acidifiant (acid lactic)</li>
-                        <li>Stabilizator (gumă de xantan)</li>
-                        <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
-                        <li>Praf de ou integral (0,19%)</li>
-                        <li>Colorant (caroteni)</li>
-                        <li>Antioxidant (calciu-disodic-EDTA)</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">SOS DIN PIURE DE ROȘII DULCE</div>
-            <div class="content">
-                <div class="info-box">
-                    <h3>Ingrediente: </h3>
-                    <ul>
-                        <li>Piure de roșii (63%), apă, zahăr</li>
-                        <li>Amidon modificat din porumb, sare</li>
-                        <li>Oțet din alcool, acidifiant (acid citric)</li>
-                        <li>Condimente, aromă de tomate</li>
-                        <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
-                        <li>Aromă de tomate</li>
-                    </ul>
-                </div>
-
-                <div class="info-box">
-                    <ul>
-                        <li>Piure de roșii obținut din pastă de tomate de origine UE și din afara UE.</li>
-                        <li>PRODUS PASTEURIZAT</li>
-                    </ul>
-                </div>
+    <div class="card">
+        <div class="card-title">SOS DE MAIONEZĂ </div>
+        <div class="content">
+            <div class="info-box">
+                <h3>Ingrediente: </h3>
+                <ul>
+                    <li>Ulei vegetal de floarea-soarelui (40%), apă (40%)</li>
+                    <li>Muștar (apă, oțet din alcool etilic rafinat, boabe de muștar, zahăr, sare)</li>
+                    <li>Zahăr</li>
+                    <li>Oțet din alcool etilic rafinat</li>
+                    <li>Amidon modificat de porumb și de cartof</li>
+                    <li>Sare</li>
+                    <li>Acidifiant (acid lactic)</li>
+                    <li>Stabilizator (gumă de xantan)</li>
+                    <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
+                    <li>Praf de ou integral (0,19%)</li>
+                    <li>Colorant (caroteni)</li>
+                    <li>Antioxidant (calciu-disodic-EDTA)</li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <!-- 2. TAB: EGYEDI KINÉZETŰ ÉLŐ GOOGLE SHEETS ADATOK -->
-    <div id="olaj" class="tab-content">
-        <h2 class="section-title">Grafic Monitorizare Ulei (Live Excel Data)</h2>
-        
-        <!-- Admin Sáv jelszóhoz és mentéshez -->
-        <div class="admin-bar">
-            <input type="password" id="adminPassword" placeholder="Jelszó a mentéshez...">
-            <button onclick="saveTableData()">💾 Módosítások Mentése</button>
-            <span id="saveStatus" style="font-weight: bold; margin-left: 10px;"></span>
-        </div>
+    <div class="card">
+        <div class="card-title">SOS DIN PIURE DE ROȘII DULCE</div>
+        <div class="content">
+            <div class="info-box">
+                <h3>Ingrediente: </h3>
+                <ul>
+                    <li>Piure de roșii (63%), apă, zahăr</li>
+                    <li>Amidon modificat din porumb, sare</li>
+                    <li>Oțet din alcool, acidifiant (acid citric)</li>
+                    <li>Condimente, aromă de tomate</li>
+                    <li>Conservanți (sorbat de potasiu, benzoat de sodiu)</li>
+                    <li>Aromă de tomate</li>
+                </ul>
+            </div>
 
-        <div class="custom-table-wrapper">
-            <div id="loading" class="loading-text">Informațiile se încarcă din baza de date...</div>
-            <div id="table-container"></div>
+            <div class="info-box">
+                <ul>
+                    <li>Piure de roșii obținut din pastă de tomate de origine UE și din afara UE.</li>
+                    <li>PRODUS PASTEURIZAT</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -439,192 +221,6 @@ footer {
     </footer>
 
 </div>
-
-<script>
-// Tab váltás függvény
-function openTab(tabName) {
-    var contents = document.getElementsByClassName("tab-content");
-    for (var i = 0; i < contents.length; i++) {
-        contents[i].classList.remove("active");
-    }
-
-    var buttons = document.getElementsByClassName("tab-button");
-    for (var i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove("active");
-    }
-
-    document.getElementById(tabName).classList.add("active");
-    event.currentTarget.classList.add("active");
-}
-
-const SHEET_ID = '2PACX-1vQNvpQ2f9VQ2Sfk8I8wt3F4gjB2qVCozB1gNbWkjroB1tkiduFJv6wMvrx8Tj3pmt8Rbgk0PjibqBYI';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbIFwMyWdxJpFnVErKuLbRvfuKZbMUB13Zc3_FI3PEgNppoTnxSZmqW1n4hnzaL-WkRQ/exec';
-
-const DAY_NAMES_RO = ['DUMINICA', 'LUNI', 'MARTI', 'MIERCURI', 'JOI', 'VINERI', 'SAMBATA'];
-const MONTH_NAMES_RO = ['IANUARIE', 'FEBRUARIE', 'MARTIE', 'APRILIE', 'MAI', 'IUNIE', 'IULIE', 'AUGUST', 'SEPTEMBRIE', 'OCTOMBRIE', 'NOIEMBRIE', 'DECEMBRIE'];
-
-function renderGoogleSheetData() {
-    const csvUrl = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv&t=${new Date().getTime()}`;
-    
-    fetch(csvUrl)
-        .then(response => {
-            if (response.ok) return response.text();
-            throw new Error('Hálózati hiba történt.');
-        })
-        .then(csvText => {
-            const rows = csvText.split('\n').map(row => row.split(','));
-            const dataByDate = {};
-
-            for (let i = 1; i < rows.length; i++) {
-                if (rows[i].length >= 4) {
-                    let rawDate = rows[i][1].replace(/"/g, '').trim(); 
-                    let type = rows[i][2].replace(/"/g, '').trim().toLowerCase(); 
-                    let qty = rows[i][3].replace(/"/g, '').replace(/l/g, '').trim(); 
-
-                    if (!rawDate) continue;
-
-                    // Elfogadjuk a "2026. 07. 01" formátumot
-                    let parts = rawDate.split('.');
-                    if (parts.length >= 3) {
-                        let yyyy = parts[0].trim();
-                        let mm = parts[1].trim().padStart(2, '0');
-                        let dd = parts[2].trim().padStart(2, '0');
-                        let formattedKey = `${yyyy}-${mm}-${dd}`;
-
-                        if (!dataByDate[formattedKey]) {
-                            dataByDate[formattedKey] = { schimbare: '', completare: '' };
-                        }
-
-                        if (type.includes('schimbare')) {
-                            dataByDate[formattedKey].schimbare = qty;
-                        } else if (type.includes('completare')) {
-                            dataByDate[formattedKey].completare = qty;
-                        }
-                    }
-                }
-            }
-
-            const months = [...new Set(Object.keys(dataByDate).map(d => d.substring(0, 7)))].sort();
-            let fullHtml = '';
-
-            months.forEach(monthKey => {
-                const [year, monthStr] = monthKey.split('-');
-                const monthIdx = parseInt(monthStr, 10) - 1;
-                const totalDays = new Date(year, monthIdx + 1, 0).getDate();
-
-                fullHtml += `<div class="month-container">`;
-                fullHtml += `<h2 class="month-title">GRAFIC MONITORIZARE - ${MONTH_NAMES_RO[monthIdx]} ${year}</h2>`;
-
-                for (let startDay = 1; startDay <= totalDays; startDay += 7) {
-                    let endDay = Math.min(startDay + 6, totalDays);
-                    
-                    fullHtml += `<div class="week-block">`;
-                    fullHtml += `<div class="week-header">Saptamana: ${startDay}-${endDay}</div>`;
-                    fullHtml += `<table class="paper-table">`;
-                    
-                    fullHtml += `<thead><tr><th class="col-title">ZIUA</th>`;
-                    for (let day = startDay; day <= endDay; day++) {
-                        let currentDate = new Date(year, monthIdx, day);
-                        let dayName = DAY_NAMES_RO[currentDate.getDay()];
-                        fullHtml += `<th>${dayName}<br><small>(${day})</small></th>`;
-                    }
-                    fullHtml += `</tr></thead><tbody>`;
-
-                    // Sor 1: Schimbare ulei
-                    fullHtml += `<tr><td class="row-title">Schimbare ulei</td>`;
-                    for (let day = startDay; day <= endDay; day++) {
-                        let dayFormatted = String(day).padStart(2, '0');
-                        let dateKey = `${year}-${monthStr}-${dayFormatted}`;
-                        // Ezzel a pontos formátummal küldjük vissza az adatsort: "2026. 07. 01"
-                        let customFormattedDate = `${year}. ${monthStr}. ${dayFormatted}`;
-                        
-                        let val = dataByDate[dateKey] ? dataByDate[dateKey].schimbare : '';
-                        fullHtml += `<td contenteditable="true" data-date="${customFormattedDate}" data-type="Schimbare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
-                    }
-                    fullHtml += `</tr>`;
-
-                    // Sor 2: Completare ulei
-                    fullHtml += `<tr><td class="row-title">Completare ulei</td>`;
-                    for (let day = startDay; day <= endDay; day++) {
-                        let dayFormatted = String(day).padStart(2, '0');
-                        let dateKey = `${year}-${monthStr}-${dayFormatted}`;
-                        // Ezzel a pontos formátummal küldjük vissza az adatsort: "2026. 07. 01"
-                        let customFormattedDate = `${year}. ${monthStr}. ${dayFormatted}`;
-
-                        let val = dataByDate[dateKey] ? dataByDate[dateKey].completare : '';
-                        fullHtml += `<td contenteditable="true" data-date="${customFormattedDate}" data-type="Completare" class="editable-cell">${val ? val + 'l' : ''}</td>`;
-                    }
-                    fullHtml += `</tr>`;
-
-                    fullHtml += `</tbody></table></div>`;
-                }
-
-                fullHtml += `</div>`;
-            });
-
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('table-container').innerHTML = fullHtml;
-        })
-        .catch(error => {
-            console.error(error);
-            document.getElementById('loading').innerText = 'Eroare la încărcarea datelor!';
-        });
-}
-
-function saveTableData() {
-    const password = document.getElementById('adminPassword').value;
-    const statusText = document.getElementById('saveStatus');
-
-    if (!password) {
-        alert('Kérlek add meg a jelszót a mentéshez!');
-        return;
-    }
-
-    const editableCells = document.querySelectorAll('.editable-cell');
-    const updates = [];
-
-    editableCells.forEach(cell => {
-        let rawVal = cell.innerText.replace(/l/g, '').trim();
-        if (rawVal !== '') {
-            updates.push({
-                date: cell.getAttribute('data-date'),
-                type: cell.getAttribute('data-type'),
-                quantity: rawVal
-            });
-        }
-    });
-
-    statusText.style.color = 'black';
-    statusText.innerText = ' Mentés...';
-
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' }, // no-cors eltávolítva, hogy válasz érkezhessen!
-        body: JSON.stringify({ password: password, updates: updates })
-    })
-    .then(response => response.json())
-    .then(res => {
-        if (res.status === 'success') {
-            statusText.style.color = 'green';
-            statusText.innerText = ' SIKERES MENTÉS!';
-            alert("Eredmény: " + res.message + "\nRészletek: " + res.debug);
-            renderGoogleSheetData();
-        } else {
-            statusText.style.color = 'red';
-            statusText.innerText = ' Hiba: ' + res.message;
-            alert("Hiba történt: " + res.message);
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        statusText.style.color = 'red';
-        statusText.innerText = ' Hiba történt!';
-        alert("Küldési hiba! Ellenőrizd a konzolt (F12).");
-    });
-}
-
-window.onload = renderGoogleSheetData;
-</script>
 
 </body>
 </html>
